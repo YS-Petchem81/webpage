@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실습 안전·준비물 가이드</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 로그인 페이지 -->
+    <div id="loginPage" class="login-page">
+        <div class="login-page-container">
+            <div class="login-page-header">
+                <h1>⚡ 실습 안전·준비물 가이드</h1>
+                <p>이번 주 실습 일정과 준비물을 확인하세요</p>
+            </div>
+            
+            <div class="login-page-buttons">
+                <button class="login-page-btn" onclick="openLoginModal()">로그인</button>
+                <button class="signup-page-btn" onclick="openSignupModal()">회원가입</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 페이지 -->
+    <div id="mainPage" class="main-page" style="display: none;">
+        <div class="header">
+            <button class="header-back-btn" style="visibility: hidden;">←</button>
+            <div class="header-content">
+                <h1>⚡ 실습 안전·준비물 가이드</h1>
+                <p>이번 주 실습 일정과 준비물을 확인하세요</p>
+            </div>
+            <button id="loginBtn" class="login-btn" onclick="openLoginModal()">로그인</button>
+        </div>
+
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input type="text" class="search-input" id="searchInput" placeholder="과목명이나 키워드 검색 (예: 용접, 선반)">
+                <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()">✕</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="section-title-with-nav">
+                <button class="nav-arrow left" onclick="prevWeek()">←</button>
+                <div class="section-title" id="weekTitle">📅 1주차 시간표</div>
+                <button class="nav-arrow right" onclick="nextWeek()">→</button>
+            </div>
+            <div class="timetable" id="timetable"></div>
+        </div>
+
+        <div class="container" style="margin-top: 30px;">
+            <div class="section-title">📍 오늘의 시간표</div>
+            <div id="todaySchedule" class="today-schedule"></div>
+        </div>
+    </div>
+
+    <!-- 선생 전용 페이지 -->
+    <div id="teacherPage" class="main-page" style="display: none;">
+        <div class="header">
+            <button class="header-back-btn" style="visibility: hidden;">←</button>
+            <div class="header-content">
+                <h1>⚡ 실습 시간표 관리</h1>
+                <p>주차별 시간표를 배정하세요</p>
+            </div>
+            <button id="logoutBtn" class="login-btn" onclick="handleLogout()">로그아웃</button>
+        </div>
+
+        <div class="search-container">
+            <div class="search-wrapper">
+                <button class="add-class-btn" onclick="openAddClassModal()">➕ 강의 추가</button>
+                <button class="add-class-btn" onclick="openAssignStudentModal()">👥 학생 배정</button>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="section-title-with-nav">
+                <button class="nav-arrow left" onclick="prevWeekTeacher()">←</button>
+                <div class="section-title" id="weekTitleTeacher">📅 1주차 시간표</div>
+                <button class="nav-arrow right" onclick="nextWeekTeacher()">→</button>
+            </div>
+            <div class="timetable" id="timetableTeacher"></div>
+        </div>
+    </div>
+
+    <!-- 상세 페이지 -->
+    <div id="detailPage" class="detail-page">
+        <div class="detail-header">
+            <button class="header-back-btn" onclick="goBack()">←</button>
+            <div class="header-content">
+                <h2 id="detailTitle">실습명</h2>
+                <p id="detailTime">시간</p>
+            </div>
+            <div style="width: 40px;"></div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="preparation">준비물</div>
+            <div class="tab" data-tab="safety">안전수칙</div>
+            <div class="tab" data-tab="emergency">사고 대처</div>
+        </div>
+
+        <div id="preparation" class="tab-content active">
+            <div id="preparationContent"></div>
+        </div>
+
+        <div id="safety" class="tab-content">
+            <div id="safetyContent"></div>
+        </div>
+
+        <div id="emergency" class="tab-content">
+            <div id="emergencyContent"></div>
+        </div>
+    </div>
+
+    <!-- SOS 비상 버튼 -->
+    <button class="sos-button" onclick="openSOSModal()">🚨 [SOS 긴급 비상]</button>
+
+    <!-- 로그인 모달 -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content" style="max-width: 350px;">
+            <button class="modal-close-btn" onclick="closeLoginModal()">✕</button>
+            <div class="modal-title">로그인</div>
+            
+            <div id="loginRoleSelection" class="login-role-selection">
+                <button class="role-btn" onclick="selectLoginRole('teacher')">
+                    👨‍🏫 선생 로그인
+                </button>
+                <button class="role-btn" onclick="selectLoginRole('student')">
+                    👨‍🎓 학생 로그인
+                </button>
+            </div>
+
+            <div id="loginForm" style="display: none;">
+                <div class="login-form-container">
+                    <div class="form-group">
+                        <label for="loginEmail">이메일</label>
+                        <input type="email" id="loginEmail" placeholder="example@school.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">비밀번호</label>
+                        <input type="password" id="loginPassword" placeholder="비밀번호 입력">
+                    </div>
+                    <button class="login-submit-btn" onclick="handleLogin()">로그인</button>
+                    <button class="login-back-btn" onclick="backToRoleSelection()">돌아가기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 회원가입 모달 -->
+    <div id="signupModal" class="modal">
+        <div class="modal-content" style="max-width: 350px;">
+            <button class="modal-close-btn" onclick="closeSignupModal()">✕</button>
+            <div class="modal-title">회원가입</div>
+            
+            <div id="signupRoleSelection" class="login-role-selection">
+                <button class="role-btn" onclick="selectSignupRole('teacher')">
+                    👨‍🏫 선생으로 가입
+                </button>
+                <button class="role-btn" onclick="selectSignupRole('student')">
+                    👨‍🎓 학생으로 가입
+                </button>
+            </div>
+
+            <div id="signupForm" style="display: none;">
+                <div class="login-form-container">
+                    <div class="form-group">
+                        <label for="signupEmail">이메일</label>
+                        <input type="email" id="signupEmail" placeholder="example@school.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="signupPassword">비밀번호</label>
+                        <input type="password" id="signupPassword" placeholder="비밀번호 입력">
+                    </div>
+                    <button class="login-submit-btn" onclick="handleSignup()">회원가입</button>
+                    <button class="login-back-btn" onclick="backToSignupRoleSelection()">돌아가기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 강의 추가 모달 -->
+    <div id="addClassModal" class="modal">
+        <div class="modal-content" style="max-width: 350px;">
+            <button class="modal-close-btn" onclick="closeAddClassModal()">✕</button>
+            <div class="modal-title">강의 추가</div>
+            
+            <div class="login-form-container">
+                <div class="form-group">
+                    <label for="className">실습명</label>
+                    <select id="className">
+                        <option value="">실습 선택</option>
+                        <option value="용접 실습">용접 실습</option>
+                        <option value="선반 실습">선반 실습</option>
+                        <option value="목공 실습">목공 실습</option>
+                        <option value="전기 실습">전기 실습</option>
+                        <option value="자동차 실습">자동차 실습</option>
+                        <option value="금속 가공 실습">금속 가공 실습</option>
+                        <option value="페인팅 실습">페인팅 실습</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="classWeek">주차</label>
+                    <select id="classWeek">
+                        <option value="">주차 선택</option>
+                        <option value="1">1주차</option>
+                        <option value="2">2주차</option>
+                        <option value="3">3주차</option>
+                        <option value="4">4주차</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="classDay">요일</label>
+                    <select id="classDay">
+                        <option value="">요일 선택</option>
+                        <option value="월">월요일</option>
+                        <option value="화">화요일</option>
+                        <option value="수">수요일</option>
+                        <option value="목">목요일</option>
+                        <option value="금">금요일</option>
+                        <option value="토">토요일</option>
+                        <option value="일">일요일</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>시작 시간</label>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="classStartHour" style="flex: 1;">
+                            <option value="">시간</option>
+                            <option value="00">00시</option>
+                            <option value="01">01시</option>
+                            <option value="02">02시</option>
+                            <option value="03">03시</option>
+                            <option value="04">04시</option>
+                            <option value="05">05시</option>
+                            <option value="06">06시</option>
+                            <option value="07">07시</option>
+                            <option value="08">08시</option>
+                            <option value="09">09시</option>
+                            <option value="10">10시</option>
+                            <option value="11">11시</option>
+                            <option value="12">12시</option>
+                            <option value="13">13시</option>
+                            <option value="14">14시</option>
+                            <option value="15">15시</option>
+                            <option value="16">16시</option>
+                            <option value="17">17시</option>
+                            <option value="18">18시</option>
+                            <option value="19">19시</option>
+                            <option value="20">20시</option>
+                            <option value="21">21시</option>
+                            <option value="22">22시</option>
+                            <option value="23">23시</option>
+                        </select>
+                        <select id="classStartMin" style="flex: 1;">
+                            <option value="">분</option>
+                            <option value="00">00분</option>
+                            <option value="05">05분</option>
+                            <option value="10">10분</option>
+                            <option value="15">15분</option>
+                            <option value="20">20분</option>
+                            <option value="25">25분</option>
+                            <option value="30">30분</option>
+                            <option value="35">35분</option>
+                            <option value="40">40분</option>
+                            <option value="45">45분</option>
+                            <option value="50">50분</option>
+                            <option value="55">55분</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>종료 시간</label>
+                    <div style="display: flex; gap: 10px;">
+                        <select id="classEndHour" style="flex: 1;">
+                            <option value="">시간</option>
+                            <option value="00">00시</option>
+                            <option value="01">01시</option>
+                            <option value="02">02시</option>
+                            <option value="03">03시</option>
+                            <option value="04">04시</option>
+                            <option value="05">05시</option>
+                            <option value="06">06시</option>
+                            <option value="07">07시</option>
+                            <option value="08">08시</option>
+                            <option value="09">09시</option>
+                            <option value="10">10시</option>
+                            <option value="11">11시</option>
+                            <option value="12">12시</option>
+                            <option value="13">13시</option>
+                            <option value="14">14시</option>
+                            <option value="15">15시</option>
+                            <option value="16">16시</option>
+                            <option value="17">17시</option>
+                            <option value="18">18시</option>
+                            <option value="19">19시</option>
+                            <option value="20">20시</option>
+                            <option value="21">21시</option>
+                            <option value="22">22시</option>
+                            <option value="23">23시</option>
+                        </select>
+                        <select id="classEndMin" style="flex: 1;">
+                            <option value="">분</option>
+                            <option value="00">00분</option>
+                            <option value="05">05분</option>
+                            <option value="10">10분</option>
+                            <option value="15">15분</option>
+                            <option value="20">20분</option>
+                            <option value="25">25분</option>
+                            <option value="30">30분</option>
+                            <option value="35">35분</option>
+                            <option value="40">40분</option>
+                            <option value="45">45분</option>
+                            <option value="50">50분</option>
+                            <option value="55">55분</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="login-submit-btn" onclick="handleAddClass()">추가</button>
+                <button class="login-back-btn" onclick="closeAddClassModal()">취소</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 학생 할당 모달 -->
+    <div id="assignStudentModal" class="modal">
+        <div class="modal-content" style="max-width: 350px;">
+            <button class="modal-close-btn" onclick="closeAssignStudentModal()">✕</button>
+            <div class="modal-title">학생 배정</div>
+            
+            <div class="login-form-container">
+                <div class="form-group">
+                    <label for="studentEmail">학생 이메일</label>
+                    <select id="studentEmail">
+                        <option value="">학생 선택</option>
+                    </select>
+                </div>
+                <button class="login-submit-btn" onclick="handleAssignStudent()">배정</button>
+                <button class="login-back-btn" onclick="closeAssignStudentModal()">취소</button>
+            </div>
+
+            <!-- 할당된 학생 목록 -->
+            <div id="assignedStudentsList" style="margin-top: 20px;">
+                <div style="font-weight: 600; margin-bottom: 10px;">📋 현재 배정된 학생:</div>
+                <div id="studentListContainer" style="max-height: 200px; overflow-y: auto;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOS 모달 -->
+    <div id="sosModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-title">🚨 긴급 연결</div>
+            
+            <div class="emergency-contacts">
+                <button class="contact-btn" onclick="makeCall('1119')">🚑 119 - 구급차 요청</button>
+                <button class="contact-btn" onclick="makeCall('112')">👮 112 - 경찰청</button>
+                <button class="contact-btn" onclick="makeCall('054-1234-5678')">🏫 보건실 (054-1234-5678)</button>
+                <button class="contact-btn" onclick="makeCall('054-9876-5432')">📋 교무실 (054-9876-5432)</button>
+            </div>
+
+            <div class="emergency-guides">
+                <div class="guide-item">
+                    <strong>🔥 화상 대처법</strong>
+                    흐르는 물에 10-20분간 식힌 후 의료진에 신고
+                </div>
+                <div class="guide-item">
+                    <strong>✂️ 절상 대처법</strong>
+                    깨끗한 천으로 압박하여 지혈, 즉시 병원 이송
+                </div>
+                <div class="guide-item">
+                    <strong>⚡ 감전 대처법</strong>
+                    먼저 전원 차단 후 심폐소생술 준비
+                </div>
+                <div class="guide-item">
+                    <strong>🤕 눈 화학약품 접촉</strong>
+                    흐르는 물에 15분 이상 세척
+                </div>
+            </div>
+
+            <button class="close-modal" onclick="closeSOSModal()">닫기</button>
+        </div>
+    </div>
+
+    <script src="script.js?v=3"></script>
+</body>
+</html>
