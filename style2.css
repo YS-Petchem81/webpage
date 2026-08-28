@@ -891,14 +891,12 @@ body {
 
     .sos-button {
         bottom: 20px !important;
-        left: 15px !important;
-        right: 15px !important;
-        width: calc(100% - 30px) !important;
-        max-width: calc(390px - 30px) !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: calc(390px - 30px) !important;
+        max-width: calc(100% - 30px) !important;
         padding: 20px !important;
         font-size: 20px !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
     }
 
     .header {
