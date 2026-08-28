@@ -864,8 +864,13 @@ body {
 
 /* 데스크톱 반응형 스타일 */
 @media (min-width: 768px) {
+    html {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    }
+
     body {
         padding-bottom: 100px !important;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     }
 
     .login-page {
@@ -873,6 +878,7 @@ body {
         max-width: 100% !important;
         margin: 0 auto !important;
         padding: 20px !important;
+        background: transparent !important;
     }
 
     .sos-button {
