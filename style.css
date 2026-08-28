@@ -865,33 +865,34 @@ body {
 /* 데스크톱 반응형 스타일 */
 @media (min-width: 768px) {
     body {
-        padding-bottom: 100px;
+        padding-bottom: 100px !important;
     }
 
     .login-page {
-        width: 390px;
-        max-width: 100%;
-        margin: 0 auto;
+        width: 390px !important;
+        max-width: 100% !important;
+        margin: 0 auto !important;
+        padding: 20px !important;
     }
 
     .sos-button {
-        bottom: 20px;
-        left: 15px;
-        right: 15px;
-        width: calc(100% - 30px);
-        padding: 20px;
-        font-size: 20px;
+        bottom: 20px !important;
+        left: 15px !important;
+        right: 15px !important;
+        width: calc(100% - 30px) !important;
+        padding: 20px !important;
+        font-size: 20px !important;
     }
 
     .login-page-container {
-        max-width: 350px;
+        max-width: 350px !important;
     }
 
     .header {
-        font-size: 36px;
+        font-size: 36px !important;
     }
 
     .main-page-description {
-        font-size: 18px;
+        font-size: 18px !important;
     }
 }
